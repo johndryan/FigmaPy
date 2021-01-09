@@ -109,8 +109,13 @@ class FigmaPy:
     """
     Get the version history of a file.
     """
-    def get_file_versions(self, file_key):
-        data = self.api_request('files/{0}/versions'.format(file_key), method='get')
+    def get_file_versions(self, file_key, paginate_from=None, search_direction='before', page_size=30):
+        endpoint = 'files/{0}/versions'.format(file_key)
+        if paginate_from is not None:
+            endpoint += '?page_size={0}&{1}={2}'.format(
+                    page_size, search_direction, paginate_from
+                )
+        data = self.api_request(endpoint, method='get')
         if data is not None:
             return FileVersions(data['versions'], data['pagination'])
 
